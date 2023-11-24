@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Dynamo</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/bs-theme-overrides.css">
+    <link rel="stylesheet" href="assets/css/Articles-Badges-images.css">
+    <link rel="stylesheet" href="assets/css/Login-Form-Basic-icons.css">
+</head>
+
+<body>
+    <section class="position-relative py-4 py-xl-5">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md-8 col-xl-6 text-center mx-auto">
+                    <h2>Dynamo Sign Up</h2>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-6 col-xl-4">
+                    <div class="card mb-5">
+                        <div class="card-body d-flex flex-column align-items-center">
+                            <form class="text-center" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+                                <div class="mb-3"><input formControlName="user" class="form-control" type="email" name="user" placeholder="Usuario" id="user"></div>
+                                <div class="mb-3"><input formControlName="pass" class="form-control" type="password" name="password" placeholder="Contraseña" id="pass"></div>
+                                <div class="mb-3"><input formControlName="confirmPass" class="form-control" type="password" name="passwordConfirm" placeholder="Confirmar Contraseña" id="confirmPass"></div>
+                                <div class="mb-3"><input formControlName="name" class="form-control" type="text" name="name" placeholder="Nombre" id="name"></div>
+                                <div class="mb-3"><input formControlName="twoFA" class="form-control" type="number" name="twoFA" placeholder="2FA" id="twoFA"></div>
+                                <div class="mb-3"><button [disabled]="loading" class="btn btn-primary d-block w-100" type="submit">Entrar</button></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>
