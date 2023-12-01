@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<div mat-dialog-content>
+  <p>{{data.message}}</p>
+  <mat-form-field>
+    <mat-label>{{data.title}}</mat-label>
+    <input matInput [(ngModel)]="data.number" pattern="\d{4}" name="fourDigitInput" #fourDigitInput="ngModel" autocomplete="no-autofill-random-value">
+    <mat-error *ngIf="fourDigitInput.invalid && (fourDigitInput.dirty || fourDigitInput.touched)">
+        Ingresa un número de 4 dígitos
+      </mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions style="margin-left: auto; margin-right: 0px;">
+  <button mat-button [mat-dialog-close]="data.number" [disabled]="fourDigitInput.invalid || !data.number">Enviar</button>
+</div>

@@ -4,29 +4,44 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Dynamo</title>
+    <title>login</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/bs-theme-overrides.css">
-    <link rel="stylesheet" href="assets/css/Articles-Badges-images.css">
     <link rel="stylesheet" href="assets/css/Login-Form-Basic-icons.css">
 </head>
 
 <body>
-    <section class="position-relative py-4 py-xl-5">
-        <div class="container">
+    <section class="position-relative py-4 py-xl-5" style="--bs-primary: #b868e8;--bs-primary-rgb: 184,104,232;">
+        <nav class="navbar navbar-expand-md bg-body py-3" style="backdrop-filter: invert(0%);transform: perspective(0px);">
+            <div class="container"><a class="navbar-brand d-flex align-items-center" href="#"><span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-boxes">
+                            <path d="M7.752.066a.5.5 0 0 1 .496 0l3.75 2.143a.5.5 0 0 1 .252.434v3.995l3.498 2A.5.5 0 0 1 16 9.07v4.286a.5.5 0 0 1-.252.434l-3.75 2.143a.5.5 0 0 1-.496 0l-3.502-2-3.502 2.001a.5.5 0 0 1-.496 0l-3.75-2.143A.5.5 0 0 1 0 13.357V9.071a.5.5 0 0 1 .252-.434L3.75 6.638V2.643a.5.5 0 0 1 .252-.434L7.752.066ZM4.25 7.504 1.508 9.071l2.742 1.567 2.742-1.567L4.25 7.504ZM7.5 9.933l-2.75 1.571v3.134l2.75-1.571V9.933Zm1 3.134 2.75 1.571v-3.134L8.5 9.933v3.134Zm.508-3.996 2.742 1.567 2.742-1.567-2.742-1.567-2.742 1.567Zm2.242-2.433V3.504L8.5 5.076V8.21l2.75-1.572ZM7.5 8.21V5.076L4.75 3.504v3.134L7.5 8.21ZM5.258 2.643 8 4.21l2.742-1.567L8 1.076 5.258 2.643ZM15 9.933l-2.75 1.571v3.134L15 13.067V9.933ZM3.75 14.638v-3.134L1 9.933v3.134l2.75 1.571Z"></path>
+                        </svg></span><span>Dynamo</span></a>
+                <div class="collapse navbar-collapse" id="navcol-2">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"></li>
+                        <li class="nav-item"></li>
+                        <li class="nav-item"><a class="nav-link" href="signup">Registro (Admin)</a></li>
+                    </ul><a class="btn btn-primary ms-md-2" role="button" href="login" style="background: rgb(184,104,232);">Iniciar sesión</a>
+                </div>
+            </div>
+        </nav>
+        <div class="container" style="--bs-primary: #b868e8;--bs-primary-rgb: 184,104,232;">
             <div class="row mb-5">
                 <div class="col-md-8 col-xl-6 text-center mx-auto">
-                    <h2>Dynamo LogIn</h2>
+                    <h2>Iniciar sesión</h2>
+                    <p class="w-lg-50">Inicio de sesión para el ingreso a la plataforma.</p>
                 </div>
             </div>
             <div class="row d-flex justify-content-center">
                 <div class="col-md-6 col-xl-4">
                     <div class="card mb-5">
                         <div class="card-body d-flex flex-column align-items-center">
+                            <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon my-4"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person">
+                                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"></path>
+                                </svg></div>
                             <form class="text-center" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                                <div class="mb-3"><input formControlName="user" class="form-control" type="email" name="user" placeholder="Usuario" id="user"></div>
-                                <div class="mb-3"><input formControlName="pass" class="form-control" type="password" name="password" placeholder="Contraseña" id="pass"></div>
-                                <div class="mb-3"><button [disabled]="loading" class="btn btn-primary d-block w-100" type="submit">Entrar</button></div>
+                                <div class="mb-3"><input class="form-control" type="email" name="user" placeholder="Correo Electrónico" formControlName="user"></div>
+                                <div class="mb-3"><input class="form-control" type="password" name="password" placeholder="Contraseña" formControlName="pass"></div>
+                                <div class="mb-3"><button [disabled]="loading" class="btn btn-primary d-block w-100" type="submit" style="--bs-primary: #b868e8;--bs-primary-rgb: 184,104,232;background: #b868e8;">Entrar</button></div>
                             </form>
                         </div>
                     </div>

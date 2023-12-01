@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClient } from '@angular/common/http';
@@ -11,7 +12,7 @@ import { environment } from '../../environment/environment';
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatSnackBarModule],
+  imports: [MatTooltipModule, CommonModule, ReactiveFormsModule, MatSnackBarModule],
   templateUrl: './index.html',
 })
 export class SignupComponent {
@@ -25,7 +26,8 @@ export class SignupComponent {
     private cookieService: CookieService,
     private httpClient: HttpClient,
     ) {
-    this.signupForm = this.fb.group({
+      
+    this.signupForm = this.fb.group({ //Crea el formulario de registro
       user: '',
       pass: '',
       confirmPass: '',
@@ -34,7 +36,7 @@ export class SignupComponent {
     });
   }
 
-  onSubmit() {
+  onSubmit() {  //Se ejecuta al enviar el formulario de registro y envía los datos al servidor
     const formData = this.signupForm.value;
     this.loading = true;
 
@@ -58,17 +60,17 @@ export class SignupComponent {
     this.httpClient.post(`${environment.api_url}/auth/signup`, postData).subscribe((res: any) => {
       this.loading = false;
       this.cookieService.set('token', res.access_token);
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/dashboard'], {queryParams: {newSession: true} });
     }, (error: any) => {
       this.loading = false;
       this.signupForm.patchValue({['pass']: ''});
       this.signupForm.patchValue({['confirmPass']: ''});
       this.signupForm.patchValue({['twoFA']: ''});
       console.log(error);
-      this.openSnackBar(`Error: ${error.error.message}`);
+      this.openSnackBar(`${error.error.message}`);
     });
   }
-  openSnackBar(message: string, action: string = 'Cerrar') {
+  openSnackBar(message: string, action: string = 'Cerrar') { //Muestra un mensaje emergente en la parte inferior de la pantalla
     this.snackBar.open(message, action, {
       duration: 5000,
     });
