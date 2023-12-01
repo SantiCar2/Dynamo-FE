@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 
 import { CookieService } from 'ngx-cookie-service';
 
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 
 import { environment } from '../../environment/environment';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,6 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loading: boolean = false;
+  token: string = this.cookieService.get('token');  //Obtiene el token de la cookie
 
   constructor(
     private fb: FormBuilder,
@@ -30,15 +31,15 @@ export class LoginComponent implements OnInit {
     private httpClient: HttpClient,
     private dialog: MatDialog
     ) {
-    this.loginForm = this.fb.group({
+
+    this.loginForm = this.fb.group({  //Crea el formulario de inicio de sesión
       user: '',
       pass: ''
     });
   }
-  ngOnInit(): void {
-    const token = this.cookieService.get('token');
-    if (token) {
-      this.httpClient.post(`${environment.api_url}/auth/verify`, { token: token }).subscribe((res: any) => {
+  ngOnInit() {  //Verifica si hay un token en la cookie y si es válido
+    if (this.token) {
+      this.httpClient.post(`${environment.api_url}/auth/verify`, { token: this.token }).subscribe((res: any) => {
         const expDate = new Date(res.exp * 1000);
 
         const dualogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -49,7 +50,7 @@ export class LoginComponent implements OnInit {
         });
         dualogRef.afterClosed().subscribe((result: boolean) => {
           if (result) {
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/dashboard'], {queryParams: {newSession: true} });
           } else {
             this.cookieService.delete('token');
             this.loginForm.patchValue({['user']: res.email})
@@ -61,7 +62,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+  onSubmit() {  //Se ejecuta al enviar el formulario de inicio de sesión y envía los datos al servidor
     const formData = this.loginForm.value;
     this.loading = true;
 
@@ -77,14 +78,16 @@ export class LoginComponent implements OnInit {
     this.httpClient.post(`${environment.api_url}/auth/login`, postData).subscribe((res: any) => {
       this.loading = false;
       this.cookieService.set('token', res.access_token);
-      this.router.navigate(['/dashboard']);
+      console.log(res.access_token);
+      console.log(this.cookieService.get('token'));
+      this.router.navigate(['/dashboard'], {queryParams: {newSession: true} });
     }, (error: any) => {
       this.loading = false;
       this.loginForm.patchValue({['pass']: ''});
-      this.openSnackBar('Credenciales incorrectas!');
+      this.openSnackBar(error.error.message);
     });
   }
-  openSnackBar(message: string, action: string = 'Cerrar') {
+  openSnackBar(message: string, action: string = 'Cerrar') {  //Muestra un mensaje emergente en la parte inferior de la pantalla
     this.snackBar.open(message, action, {
       duration: 5000,
     });
