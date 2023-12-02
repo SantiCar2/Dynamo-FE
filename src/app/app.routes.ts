@@ -10,7 +10,7 @@ export const routes: Routes = [
 
     { path: 'signup', component: SignupComponent, title: 'Dynamo Signup' },
 
-    { path: 'dashboard', component: DashboardComponent },
+    { path: 'dashboard', component: DashboardComponent, title: 'Dynamo Dashboard' },
     
     { path: 'not-found', component: NotFoundComponent },
     { path: '**', redirectTo: 'not-found' },

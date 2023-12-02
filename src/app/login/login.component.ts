@@ -78,9 +78,9 @@ export class LoginComponent implements OnInit {
     this.httpClient.post(`${environment.api_url}/auth/login`, postData).subscribe((res: any) => {
       this.loading = false;
       this.cookieService.set('token', res.access_token);
-      console.log(res.access_token);
-      console.log(this.cookieService.get('token'));
-      this.router.navigate(['/dashboard'], {queryParams: {newSession: true} });
+      this.router.navigate(['/dashboard'], {
+        queryParams: { newSession: true, tab: 'inventario' },
+      });
     }, (error: any) => {
       this.loading = false;
       this.loginForm.patchValue({['pass']: ''});

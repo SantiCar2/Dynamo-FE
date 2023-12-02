@@ -60,7 +60,9 @@ export class SignupComponent {
     this.httpClient.post(`${environment.api_url}/auth/signup`, postData).subscribe((res: any) => {
       this.loading = false;
       this.cookieService.set('token', res.access_token);
-      this.router.navigate(['/dashboard'], {queryParams: {newSession: true} });
+      this.router.navigate(['/dashboard'], {
+        queryParams: { newSession: true, tab: 'inventario' },
+      });
     }, (error: any) => {
       this.loading = false;
       this.signupForm.patchValue({['pass']: ''});

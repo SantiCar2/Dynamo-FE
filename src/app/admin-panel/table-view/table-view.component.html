@@ -1,0 +1,48 @@
+<mat-form-field>
+    <mat-label>Filtro</mat-label>
+    <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Cualquier valor de cualquier columna"
+        #input
+    />
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+        @for (column of displayedColumns; track column) {
+        <ng-container matColumnDef="{{ column }}">
+            <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ column | titlecase}}
+            </mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element">{{
+                element[column]
+            }}</mat-cell>
+        </ng-container>
+        }
+
+        <mat-header-row
+            mat-header-row
+            *matHeaderRowDef="displayedColumns"
+        ></mat-header-row>
+        <mat-row
+            mat-row
+            (click)="selectRow(row)"
+            [class.selected]="row === this.selectedRow"
+            *matRowDef="let row; columns: displayedColumns"
+            mat-ripple
+        ></mat-row>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+                No hay datos para el filtro "{{ input.value }}"
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator
+        [pageSizeOptions]="[10, 20]"
+        showFirstLastButtons
+    ></mat-paginator>
+</div>

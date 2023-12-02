@@ -1,0 +1,25 @@
+/* Structure */
+table {
+    width: 100%;
+}
+
+.mat-mdc-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+th.mat-sort-header-sorted {
+    color: black;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+    background: rgba(185, 104, 232, 0.25);
+}
+
+.mat-mdc-row {
+    transition: background-color 0.3s ease;
+}
+
+.selected {
+    background: rgba(185, 104, 232, 0.15);
+}

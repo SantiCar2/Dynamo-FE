@@ -11,10 +11,13 @@ import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dia
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { DashboardColumnsComponent } from '../dashboard-columns/dashboard-columns.component';
+
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, DashboardNavbarComponent],
+  imports: [CommonModule, DashboardNavbarComponent, DashboardColumnsComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -30,7 +33,7 @@ export class DashboardComponent  {
 
   token: string = this.cookieService.get('token');
 
-  ngOnInit() {
+  ngOnInit() {  
     this.route.queryParams.subscribe((params) => { //Verifica si hay un token en la cookie y si es válido
       if (this.token) {
         this.httpClient
