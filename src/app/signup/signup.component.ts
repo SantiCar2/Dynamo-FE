@@ -68,7 +68,10 @@ export class SignupComponent {
       this.signupForm.patchValue({['pass']: ''});
       this.signupForm.patchValue({['confirmPass']: ''});
       this.signupForm.patchValue({['twoFA']: ''});
-      console.log(error);
+      if (error.status == 0) {
+        this.openSnackBar('Error al conectar con el servidor');
+        return;
+      }
       this.openSnackBar(`${error.error.message}`);
     });
   }

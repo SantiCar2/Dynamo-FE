@@ -1,19 +1,30 @@
-<mat-form-field>
-    <mat-label>Filtro</mat-label>
-    <input
-        matInput
-        (keyup)="applyFilter($event)"
-        placeholder="Cualquier valor de cualquier columna"
-        #input
-    />
-</mat-form-field>
+<div style="display: flex">
+    <mat-form-field style="flex: 1">
+        <mat-label>Filtro</mat-label>
+        <input
+            [(ngModel)]="inputValue"
+            matInput
+            (keyup)="applyFilter($event)"
+            placeholder="Cualquier valor de cualquier columna"
+            #input
+        />
+    </mat-form-field>
+    <button
+        mat-raised-button
+        color="primary"
+        (click)="addItem()"
+        style="height: 56px; margin-left: 25px; background-color: #b868e8"
+    >
+        Agregar
+    </button>
+</div>
 
 <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
         @for (column of displayedColumns; track column) {
         <ng-container matColumnDef="{{ column }}">
             <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
-                {{ column | titlecase}}
+                {{ column }}
             </mat-header-cell>
             <mat-cell mat-cell *matCellDef="let element">{{
                 element[column]
@@ -35,12 +46,50 @@
 
         <!-- Row shown when there is no matching data. -->
         <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="4">
-                No hay datos para el filtro "{{ input.value }}"
+            <td
+                class="mat-cell"
+                colspan="4"
+                *ngIf="isLoading == false && error == false"
+                style="
+                    padding-left: 23px;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                "
+            >
+                No hay datos
+            </td>
+            <td
+                class="mat-cell"
+                colspan="4"
+                style="color: red"
+                *ngIf="error && isLoading == false"
+                style="
+                    padding-left: 23px;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                "
+            >
+                Error al cargar los datos de la tabla
             </td>
         </tr>
     </table>
-
+    <div
+        *ngIf="isLoading"
+        style="
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+        "
+    >
+        <mat-progress-spinner
+            color="primary"
+            mode="indeterminate"
+            style="height: 50px"
+        >
+        </mat-progress-spinner>
+    </div>
     <mat-paginator
         [pageSizeOptions]="[10, 20]"
         showFirstLastButtons

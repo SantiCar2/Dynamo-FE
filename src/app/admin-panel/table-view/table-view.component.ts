@@ -1,10 +1,11 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { environment } from '../../../environment/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
@@ -12,6 +13,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatRippleModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { AddItemDialogComponent } from './add-item-dialog/add-item-dialog.component';
 
 export interface PeriodicElement {
   name: string;
@@ -19,19 +25,6 @@ export interface PeriodicElement {
   weight: number;
   symbol: string;
 }
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-];
 
 @Component({
   selector: 'app-table-view',
@@ -44,21 +37,83 @@ const ELEMENT_DATA: PeriodicElement[] = [
     MatSortModule,
     MatPaginatorModule,
     MatRippleModule,
+    MatProgressSpinnerModule,
+    FormsModule,
+    MatButtonModule,
+    MatDialogModule,
   ],
   templateUrl: './table-view.component.html',
   styleUrl: './table-view.component.css',
 })
 export class TableViewComponent implements AfterViewInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  displayedColumns: string[] = [];
+  dataSource = new MatTableDataSource();
   selectedRow: any;
+  isLoading: boolean = true;
+  error: boolean = false;
+  inputValue: string = '';
 
-  constructor() {}
+  lastTab: string = '';
+
+  constructor(
+    private httpClient: HttpClient,
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private cookieService: CookieService,
+    private dialog: MatDialog,
+  ) {}
 
   @ViewChild(MatSort) sort: MatSort = new MatSort();
   @ViewChild(MatPaginator) paginator: MatPaginator = <MatPaginator>{};
 
   ngAfterViewInit() {
+    this.route.queryParams.subscribe((params) => {
+      if (params['tab'] == undefined) {
+        return;
+      }
+      if (params['tab'] != this.lastTab) {
+        this.inputValue = '';
+        this.isLoading = true;
+        this.dataSource.data = [];
+        this.displayedColumns = [];
+        this.httpClient
+          .get(`${environment.api_url}/data/${params['tab']}Table`, {
+            headers: new HttpHeaders({
+              Authorization: `Bearer ${this.cookieService.get('token')}` || '',
+            }),
+          })
+          .subscribe(
+            (res: any) => {
+              if (JSON.stringify(res) == '[]') {
+                this.displayedColumns = [`No hay datos en ${params['tab']}`];
+              } else {
+                this.dataSource = new MatTableDataSource(res);
+                this.displayedColumns = Object.keys(res[0]);
+                this.dataSource.sort = this.sort;
+                this.dataSource.paginator = this.paginator;
+              }
+              this.isLoading = false;
+              this.error = false;
+            },
+            (error: any) => {
+              if (error.status == '401') {
+                this.openSnackBar('No autorizado, se redirigirá al login');
+                this.cookieService.delete('token');
+                setTimeout(() => {
+                  window.location.href = '/login';
+                }, 7000);
+              } else {
+                this.openSnackBar('Error al cargar los datos');
+                this.displayedColumns = ['Error al cargar los datos'];
+                this.error = true;
+                this.isLoading = false;
+              }
+            },
+          );
+        this.lastTab = params['tab'];
+      }
+    });
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
   }
@@ -74,5 +129,16 @@ export class TableViewComponent implements AfterViewInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  addItem() {
+    const addItem = this.dialog.open(AddItemDialogComponent);
+    addItem.afterClosed().subscribe((result) => {});
+  }
+
+  openSnackBar(message: string, action: string = 'Cerrar') {
+    this.snackBar.open(message, action, {
+      duration: 5000,
+    });
   }
 }

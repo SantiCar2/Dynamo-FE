@@ -84,6 +84,10 @@ export class LoginComponent implements OnInit {
     }, (error: any) => {
       this.loading = false;
       this.loginForm.patchValue({['pass']: ''});
+      if (error.status == 0) {
+        this.openSnackBar('Error al conectar con el servidor');
+        return;
+      }
       this.openSnackBar(error.error.message);
     });
   }

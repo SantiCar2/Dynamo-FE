@@ -1,0 +1,116 @@
+<div style="height: auto; width: 631px; padding: 5px">
+    <h1 mat-dialog-title>Inventarios</h1>
+    <div mat-dialog-content>
+        <mat-stepper [linear]="true" #stepper>
+            <mat-step [stepControl]="firstFormGroup">
+                <form [formGroup]="firstFormGroup">
+                    <ng-template matStepLabel>Acción</ng-template>
+                    <h1></h1>
+                    <mat-button-toggle-group
+                        (change)="onToggleChange($event)"
+                        value="modify"
+                    >
+                        <mat-button-toggle value="create"
+                            >Crear</mat-button-toggle
+                        >
+                        <mat-button-toggle value="modify"
+                            >Modificar</mat-button-toggle
+                        >
+                        <mat-button-toggle value="delete"
+                            >Eliminar</mat-button-toggle
+                        >
+                    </mat-button-toggle-group>
+                    <div
+                        style="
+                            margin-top: 25px;
+                            background-color: #edd9fb;
+                            padding: 10px;
+                            border-radius: 4px;
+                        "
+                        *ngIf="
+                            this.firstFormGroup.controls['action'].value ==
+                            'delete'
+                        "
+                    >
+                        <mat-icon color="red">warning</mat-icon>
+                        <p>
+                            Es una accion destructiva, todos los datos
+                            relacionados con el inventario serán eliminados.
+                        </p>
+                        <mat-checkbox
+                            [checked]="false"
+                            (change)="checkBoxChange($event)"
+                            >Estoy seguro de lo que hago</mat-checkbox
+                        >
+                    </div>
+                    <div>
+                        <button
+                            mat-raised-button
+                            matStepperNext
+                            color="primary"
+                            style="margin-top: 25px; background-color: #b868e8"
+                            [disabled]="disableNext"
+                            (click)="loadNames()"
+                        >
+                            Continuar
+                        </button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="secondFormGroup">
+                <form [formGroup]="secondFormGroup">
+                    <ng-template matStepLabel>Detalles</ng-template>
+                    <div style="display: flex; justify-content: center">
+                        <mat-form-field style="margin: 15px">
+                            <mat-label>Nombre Actual</mat-label>
+                            <mat-select
+                                name="Nombre"
+                                formControlName="name"
+                                required
+                            >
+                                @for (name of inventoriesNames; track name) {
+                                <mat-option [value]="name">{{
+                                    name
+                                }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field style="margin: 15px">
+                            <mat-label>Nombre Nuevo</mat-label>
+                            <input
+                                matInput
+                                placeholder="Nombre nuevo"
+                                formControlName="newName"
+                                required
+                            />
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <button
+                            mat-button
+                            matStepperPrevious
+                            (click)="this.secondFormGroup.reset()"
+                        >
+                            Atrás
+                        </button>
+                        <button
+                            mat-raised-button
+                            matStepperNext
+                            color="primary"
+                            style="background-color: #b868e8"
+                        >
+                            Continuar
+                        </button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Confirmación</ng-template>
+                <div>
+                    <button mat-button matStepperNext>Continuar</button>
+                    <button mat-button matStepperPrevious>Atrás</button>
+                </div>
+            </mat-step>
+        </mat-stepper>
+    </div>
+</div>

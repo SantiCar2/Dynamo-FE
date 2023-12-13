@@ -1,0 +1,4 @@
+
+.mat-horizontal-stepper-header {
+    pointer-events: none !important;
+}

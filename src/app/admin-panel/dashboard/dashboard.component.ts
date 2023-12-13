@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { DashboardColumnsComponent } from '../dashboard-columns/dashboard-columns.component';
-
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +21,9 @@ import { DashboardColumnsComponent } from '../dashboard-columns/dashboard-column
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
-export class DashboardComponent  {
+export class DashboardComponent {
+  queryParamsSubscription!: Subscription;
+
   constructor(
     private cookieService: CookieService,
     private httpClient: HttpClient,
@@ -33,8 +35,9 @@ export class DashboardComponent  {
 
   token: string = this.cookieService.get('token');
 
-  ngOnInit() {  
-    this.route.queryParams.subscribe((params) => { //Verifica si hay un token en la cookie y si es válido
+  ngOnInit() {
+    this.queryParamsSubscription = this.route.queryParams.subscribe((params) => {
+      //Verifica si hay un token en la cookie y si es válido
       if (this.token) {
         this.httpClient
           .post(`${environment.api_url}/auth/verify`, { token: this.token })
@@ -52,6 +55,12 @@ export class DashboardComponent  {
                   if (!result) {
                     this.cookieService.delete('token');
                     this.router.navigate(['/login']);
+                  } else {
+                    this.router.navigate([], {
+                      relativeTo: this.route,
+                      queryParams: { newSession: true },
+                      queryParamsHandling: 'merge',
+                    });
                   }
                 });
               }
@@ -66,12 +75,11 @@ export class DashboardComponent  {
       }
     });
 
-
-    console.log('Dashboard si');
-    
+    this.queryParamsSubscription.unsubscribe();
   }
 
-  openSnackBar(message: string, action: string = 'Cerrar') {  //Muestra un mensaje emergente en la parte inferior de la pantalla
+  openSnackBar(message: string, action: string = 'Cerrar') {
+    //Muestra un mensaje emergente en la parte inferior de la pantalla
     this.snackBar.open(message, action, {
       duration: 5000,
     });
