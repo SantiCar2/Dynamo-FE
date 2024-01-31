@@ -25,7 +25,7 @@ export class DashboardNavbarComponent {
 
   ngOnInit() {
     //Verifica si hay un precio del dólar en la cookie y si no lo hay, lo solicita
-    if (!this.dollar) {
+    if (!this.dollar && !this.cookieService.get('token')) {
       this.changeDollar();
     }
   }
