@@ -5,13 +5,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { environment } from '../../../../../environment/environment';
 
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import {
   FormBuilder,
-  FormControl,
-  FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
@@ -60,10 +58,12 @@ export class InventoryAddComponent implements OnInit {
     private httpClient: HttpClient,
     private cookieService: CookieService,
     private snackBar: MatSnackBar,
+    public dialogRef: MatDialogRef<InventoryAddComponent>,
   ) {}
 
   ngOnInit() {
     this.loadNames();
+    this.onToggleChange({ value: 'modify' });
   }
 
   firstFormGroup = this._formBuilder.group({
@@ -129,6 +129,88 @@ export class InventoryAddComponent implements OnInit {
           }
         },
       );
+  }
+
+  onSubmit() {
+    const formData = {
+      action: this.firstFormGroup.value.action,
+      name: this.secondFormGroup.value.name,
+      newName: this.secondFormGroup.value.newName,
+    };
+
+    if (formData.action == 'create') {
+      const data = {
+        newName: formData.newName,
+      };
+      
+      this.httpClient
+        .post(`${environment.api_url}/inventories/create`, data, {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${this.cookieService.get('token')}` || '',
+          }),
+        })
+        .subscribe(
+          (data: any) => {
+            this.openSnackBar(data.message);
+            window.location.reload();
+          },
+          (error: any) => {
+            this.noAuth(error);
+          },
+        );
+      
+      this.dialogRef.close();
+    }else if (formData.action == 'delete') {
+      this.httpClient
+        .delete(`${environment.api_url}/inventories/${formData.name}`, {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${this.cookieService.get('token')}` || '',
+          }),
+        })
+        .subscribe(
+          (data: any) => {
+            this.openSnackBar(data.message);
+            window.location.reload();
+          },
+          (error: any) => {
+            this.noAuth(error);
+          },
+        );
+      
+        this.dialogRef.close();
+    }else if (formData.action == 'modify') {
+      const data = {
+        newName: formData.newName,
+      }
+      this.httpClient
+        .put(`${environment.api_url}/inventories/${formData.name}`, data, {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${this.cookieService.get('token')}` || '',
+          }),
+        })
+        .subscribe(
+          (data: any) => {
+            this.openSnackBar(data.message);
+            window.location.reload();
+          },
+          (error: any) => {
+            this.noAuth(error);
+          },
+        );
+
+      this.dialogRef.close();
+    }
+  }
+
+  noAuth(error: any) {
+    if (error.status == '401') {
+      this.openSnackBar('No autorizado, se redirigirá al login');
+      this.cookieService.delete('token');
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 7000);
+    }
+    this.openSnackBar(error.error.message);
   }
 
   openSnackBar(message: string, action: string = 'Cerrar') {

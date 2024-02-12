@@ -32,7 +32,8 @@ export class SignupComponent {
       pass: '',
       confirmPass: '',
       name: '',
-      twoFA: ''
+      twoFA: '',
+      role: ''
     });
   }
 
@@ -44,9 +45,10 @@ export class SignupComponent {
       email: formData.user,
       password: formData.pass,
       name: formData.name,
-      twoFA: formData.twoFA
+      twoFA: formData.twoFA,
+      role: formData.role
     };
-    if (formData.user === '' || formData.pass === '' || formData.confirmPass === '' || formData.twoFA === '') {
+    if (formData.user === '' || formData.pass === '' || formData.confirmPass === '' || formData.twoFA === '' || formData.role === '') {
       this.loading = false;
       this.openSnackBar('Debe ingresar todos los datos!');
       return;

@@ -23,9 +23,9 @@ export class AddItemDialogComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       if (params['tab'] === 'inventario') {
         this.inventory = true;
-      } else if (params['type'] === 'productos') {
+      } else if (params['tab'] === 'productos') {
         this.product = true;
-      } else if (params['type'] === 'transacciones') {
+      } else if (params['tab'] === 'transacciones') {
         this.transaction = true;
       }
     });

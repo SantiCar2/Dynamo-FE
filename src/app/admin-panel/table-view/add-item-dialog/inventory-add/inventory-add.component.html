@@ -105,10 +105,19 @@
                 </form>
             </mat-step>
             <mat-step>
-                <ng-template matStepLabel>Confirmación</ng-template>
+                <ng-template matStepLabel>Finalizar</ng-template>
                 <div>
-                    <button mat-button matStepperNext>Continuar</button>
+                    <h4>*Solo un administrador puede realizar cambios</h4>
                     <button mat-button matStepperPrevious>Atrás</button>
+                    <button 
+                        mat-button  
+                        mat-raised-button
+                        (click)="onSubmit()"
+                        color="primary"
+                        style="background-color: #b868e8"
+                    >
+                        Finalizar
+                    </button>
                 </div>
             </mat-step>
         </mat-stepper>
