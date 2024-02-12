@@ -1,5 +1,9 @@
 # Dynamo
 
+## Build status
+
+[![Node.js CI](https://github.com/SantiCar2/Dynamo-FE/actions/workflows/node.js.yml/badge.svg)](https://github.com/SantiCar2/Dynamo-FE/actions/workflows/node.js.yml)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.1.
 
 ## Development server
