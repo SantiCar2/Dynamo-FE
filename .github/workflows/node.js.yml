@@ -27,7 +27,7 @@ jobs:
     - run: |
         npm install
         npm install -g @angular/cli
-        ng build --configuration production --aot
+        ng build --configuration production --aot --output-path=~/dist/dynamoFE
         
   copyFiles:
     runs-on: self-hosted
@@ -36,9 +36,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: Copy files to Apache server
         run: |
-          rm -rf /srv/www/wordpress
-          mkdir /srv/www/wordpress
-          cp /home/aggu/test/Dynamo-FE/dist/dynamo/browser/* /srv/www/wordpress
+          sudo rm -rf /srv/www/wordpress
+          sudo mkdir /srv/www/wordpress
+          sudo cp /home/aggu/test/Dynamo-FE/dist/dynamo/browser/* /srv/www/wordpress
           
   restartApache:
     runs-on: self-hosted
@@ -47,6 +47,6 @@ jobs:
       - uses: actions/checkout@v3
       - name: Restart Apche server
         run: |
-          systemctl restart apache2
+          sudo systemctl restart apache2
         
         
