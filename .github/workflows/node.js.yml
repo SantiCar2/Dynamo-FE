@@ -34,5 +34,5 @@ jobs:
         sudo mkdir /srv/www/wordpress
         sudo cp dist/dynamo/browsers/* /srv/www/wordpress
     - name: Restart Apche server
-        run: |
-          sudo systemctl restart apache2
+      run: |
+        sudo systemctl restart apache2
