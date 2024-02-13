@@ -32,7 +32,7 @@ jobs:
       run: |
         sudo rm -rf /srv/www/wordpress
         sudo mkdir /srv/www/wordpress
-        sudo cp dist/dynamoFE/* /srv/www/wordpress
+        sudo cp dist/dynamoFE/browsers/* /srv/www/wordpress
         
 
   restartApache:
