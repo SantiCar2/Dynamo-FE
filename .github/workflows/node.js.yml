@@ -32,7 +32,7 @@ jobs:
       run: |
         sudo rm -rf /srv/www/wordpress
         sudo mkdir /srv/www/wordpress
-        sudo cp ./dist/dynamo/browsers/* /srv/www/wordpress
+        sudo cp /home/aggu/actions-runner/_work/Dynamo-FE/Dynamo-FE/dist/dynamo/browser/* /srv/www/wordpress
     - name: Restart Apche server
       run: |
         sudo systemctl restart apache2
