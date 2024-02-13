@@ -28,16 +28,20 @@ jobs:
         npm install
         npm install -g @angular/cli
         ng build --configuration production --aot --output-path=dist/dynamoFE
+    - name: Copy built files
+      run: |
         sudo rm -rf /srv/www/wordpress
         sudo mkdir /srv/www/wordpress
         sudo cp dist/dynamoFE/* /srv/www/wordpress
         
+
   restartApache:
     runs-on: self-hosted
 
     steps:
-      - uses: appleboy/systemd-action@v3
-        with:
-          name: apache2
-          action: restart
+      - uses: actions/checkout@v3
       - name: Restart Apche server
+        run: |
+          sudo systemctl restart apache2
+        
+        
